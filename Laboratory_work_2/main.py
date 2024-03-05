@@ -1,18 +1,13 @@
 from LinkedList import LinkedList
 
 a = LinkedList()
-
-a.append(5)
-a.append(6)
-a.append(7)
-
 b = LinkedList()
 
-node = a.head
+a.append(1)
+a.append(2)
+a.append(3)
 
-b.append(a.head.data)
-while node.next:
-    b.append(node.next.data)
-    node = node.next
+b.head = a.copy()
 
-print(b)
+print(a)
+print(b.reverse())
