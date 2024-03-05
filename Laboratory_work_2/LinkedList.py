@@ -5,13 +5,12 @@ class LinkedList:
 
     class Node:
 
-        def __init__(self, data, next=None, previous=None):
+        def __init__(self, data, next=None, previous=None, random=None ):
             self.data = data
             self.next = next
-            self.prev = previous
+            self.random = random
 
     def append(self, data):
-
         if not self.head:
             self.head = self.Node(data)
             self.length += 1
@@ -26,46 +25,71 @@ class LinkedList:
         self.length += 1
 
     def copy(self):
-        """Создаем словарь, проходим по списку, копируя каждый элемент. При первой 
-        проходке мы создим односвязный список, который связан так:
-        последний элемент -> элемент -> элемент -> первый элемент
-        При второй проходке, мы с конца, для каждого элемента добавляем
-        через метод next ссылку на последующий, тем самым у нас образуется
-        начальный элемент, который уже ссылается на следующий, который в свою очередь
-        на следующий и т.д., => образуется цепочка.
-        Возвращаем первое значение, которое является связным списком.
-        
-        Сложность выполнения:
-            (1) Первый перебор через while будет по n элементам => O(n)
-            (2) Второй перебор через while будет по n элементам => O(n)
-            
-            (3) Так же у нас 14 строк => O(14*1) = O(1)
-            
-            из (1), (2), (3) => O(n) * O(n) + O(1) = O(2*n) + O(1) = O(n + 1) = O(n)
+        """Первой проходкой метод коппирует элементы списка (data) и вставляет
+        между изначальными элементами скопированные. Т.е получается вместо массива 1 -> 2 -> 3
+        получается 1 -> 1 -> 2 -> 2 -> 3 -> 3. Второй проходкой метод расставляет "рандом"
+        ссылки для всех нечетных (отсчет с 0) элементов нового списка, опираясь на "рандом"
+        ссылки четных(отсчет с 0) элеменотов, т.е. если 1[0] -> 3[4], то 1[1] -> 3[5], как видим,
+        "рандом" сылки для новых элементов стоят на +1 по индексу "рандом" ссылок изначальных
+        элементов. Третей проходной метод разъеденяет копированные элемента от исходных, нечетные
+        отправляются в переменную head_copy и в исходном меняются ссылки на последующий элемент,
+        путем удаления следующей ссылки, т.е 1 -> 1 -> 2 ... будет ввести 1 -> 2..., а скопированный
+        список будет выглядеть 1 -> ...
+
+        (1) 3 цикла => O(3*n) = O(n)
+        (2) 20 команд => O(20*1) = O(20) = O(1)
+
+        Из (1) и (2) => O(n) + O(1) = O(n+1) = O(n)
         """
+
         if not self.head:
             return None
 
-        mapping = {}
         node = self.head
-        node_copy = self.Node(node.data)
-        mapping[node] = node_copy
-        prev = node
+        while node:
+            node_copy = self.Node(node.data)
+            node_copy.next = node.next
+            node.next = node_copy
+            node = node_copy.next
 
-        while node.next:
+        node = self.head
+        while node:
+            node.next.random = node.random.next
+            node = node.next.next
+
+        node = self.head
+        head_copy = self.Node(node.next.data, random=node.next.random)
+        node_copy = head_copy
+        while node:
+            if not node.next.next:
+                node.next = None
+                break;
+            node.next = node.next.next
+            node_copy.next = node.next.next
+            node_copy.next.random = node_copy
             node = node.next
-            node_copy = self.Node(node.data, previous=prev)
-            mapping[node] = node_copy
-            prev = node
-
-        while node.prev:
-            node_copy = node
-            node = node.prev
-            mapping[node].next = mapping[node_copy]
-
-        head_copy = mapping[node]
+            node_copy = node_copy.next
 
         return head_copy
+
+    def random(self, index, random_position):
+        if not self.head:
+            return None
+
+        node = self.head
+        i = 0
+        while i < random_position:
+            node = node.next
+            i += 1
+
+        random_position = node
+        i = 0
+        node = self.head
+        while i < index:
+            node = node.next
+            i += 1
+
+        node.random = random_position
 
     def __str__(self):
         if not self.head:
@@ -80,7 +104,15 @@ class LinkedList:
 
         line += str(node.data) + ']'
         return line
-
+    def __getitem__(self, index):
+        if not self.head:
+            return "[]"
+        i = 0
+        node = self.head
+        while i < index:
+            node = node.next
+            i += 1
+        return node
     def reverse(self):
 
         node = self.head
