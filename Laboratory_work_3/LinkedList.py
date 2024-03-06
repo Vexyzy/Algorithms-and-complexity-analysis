@@ -1,6 +1,7 @@
 class LinkedList:
 
     head = None
+    __some = "FSDKJIFJ"
     class Node:
 
         def __init__(self, data, prev=None, next=None):
