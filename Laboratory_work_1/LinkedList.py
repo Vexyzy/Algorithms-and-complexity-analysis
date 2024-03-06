@@ -5,7 +5,7 @@ class LinkedList:
     isLoop = False
 
     class Node:
-        def __init__(self, data, next_node=None):
+        def __init__(self, data, next_node= None):
             """"Realisation node element"""
             self.data = data
             self.next_node = next_node
