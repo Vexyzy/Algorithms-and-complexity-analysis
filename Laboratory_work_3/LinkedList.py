@@ -65,18 +65,17 @@ class LinkedList:
             return None
 
         node = self.head
-
         while node:
             node_sup = node
             while node_sup.next:
                 if node.data == node_sup.next.data:
                     node_sup.next = node_sup.next.next
+                    if node_sup.next:
+                        node_sup.next.prev = node_sup
                 else:
                     node_sup = node_sup.next
             node = node.next
-
         return node
-
 
 
 
