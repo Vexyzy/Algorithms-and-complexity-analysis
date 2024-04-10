@@ -13,12 +13,12 @@ a.random(2, 1)
 
 b.head = a.copy()
 
-
 print(a)
 print(b)
 print(a == b)
 print(a[0].random == a[2])
 print(b[2].random == b[1])
+print(b[0].random == b[2])
 
 
 
