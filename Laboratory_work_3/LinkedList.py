@@ -1,9 +1,7 @@
 class LinkedList:
-
     head = None
-    __some = "FSDKJIFJ"
-    class Node:
 
+    class Node:
         def __init__(self, data, prev=None, next=None):
             self.prev = prev
             self.next = next
@@ -60,7 +58,7 @@ class LinkedList:
         return line
 
     def del_duplicate(self):
-        """Deleate all dublicate elements"""
+        """Delete all duplicate elements"""
 
         if not self.head:
             return None
@@ -77,8 +75,3 @@ class LinkedList:
                     node_sup = node_sup.next
             node = node.next
         return node
-
-
-
-
-
